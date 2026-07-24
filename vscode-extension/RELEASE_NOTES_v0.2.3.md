@@ -29,11 +29,46 @@ Full Review 现在会自动生成 Markdown 文件，方便发布到 GitHub。
 **生成位置：**
 工作区根目录 / `insightor-full-review-{PR编号}.md`
 
-### 3. 🔧 其他改进
+### 3. 📤 完整的 Publish Review 功能
+
+一键发布审查报告到 GitHub PR。
+
+**特性：**
+- 自动从 Markdown 提取 PR URL
+- 一键发布评论到 GitHub
+- Dry Run 模式预览发布内容
+- 完整的错误处理和日志
+
+### 4. 🎯 更友好的操作方式
+
+不再需要总是使用 `Ctrl+Shift+P` 了！
+
+**新增快捷入口：**
+
+#### ① 状态栏按钮
+- 左下角显示 `$(checklist) Insightor` 按钮
+- 点击即可快速运行 Full Review
+
+#### ② 右键菜单
+- 在编辑器中右键 → 看到 Insightor 菜单组
+- 包含：Full Review、Review PR、Describe PR、Analyze Risks
+
+#### ③ 侧边栏工具栏
+- 打开 Insightor 侧边栏
+- 工具栏显示：Full Review、刷新、设置 按钮
+- 一键操作，无需输入命令
+
+#### ④ 文件资源管理器右键
+- 右键点击生成的 `.md` 文件（insightor-*.md）
+- 直接选择 "Publish Review" 发布
+
+### 5. 🔧 其他改进
 
 - 修复了扩展激活问题（添加 `onStartupFinished` 激活事件）
 - 优化了所有审查命令的用户体验
 - 统一了结果展示方式
+- 清理了旧版本 VSIX 文件（只保留最新版）
+- 简化了 activationEvents 配置
 
 ## 📦 使用指南
 

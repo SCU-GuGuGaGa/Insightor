@@ -11,6 +11,10 @@ All notable changes to the "insightor-vscode" extension will be documented in th
 - 🎨 **Visual Score Display** - Large circular score indicator in Webview
 - 📊 **Findings Dashboard** - Categorized cards showing Critical/High/Medium/Low counts
 - 💡 **Code Comparison View** - Side-by-side display of current code and suggested fixes
+- 🎯 **Status Bar Button** - Quick access to Full Review from bottom-left status bar
+- 📋 **Editor Context Menu** - Right-click in editor to access Insightor commands
+- 🗂️ **Explorer Context Menu** - Right-click on .md files to publish directly
+- 🔘 **Sidebar Toolbar Buttons** - One-click access to Full Review, Refresh, and Settings
 
 ### Fixed
 - ✅ Fixed "command not found" error by adding `onStartupFinished` activation event
@@ -21,8 +25,10 @@ All notable changes to the "insightor-vscode" extension will be documented in th
 ### Changed
 - 🔄 All review commands now offer Webview preview option after completion
 - 📝 Full Review automatically opens generated markdown file
-- 🎯 Enhanced user experience with actionable prompts
+- 🎯 Enhanced user experience with actionable prompts and multiple access points
 - 📤 Publish Review now fully functional (reads markdown, extracts PR URL, posts comment)
+- 🧹 Cleaned up activationEvents (simplified to onStartupFinished only)
+- 🗑️ Removed old VSIX files (kept latest version only)
 
 ### Technical
 - Added `MarkdownGenerator` service for report generation

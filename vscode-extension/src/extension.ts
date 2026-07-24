@@ -9,6 +9,7 @@ let insightorService: InsightorService;
 let insightorServiceV2: InsightorServiceV2;
 let reviewTreeProvider: ReviewTreeProvider;
 let commandHandler: CommandHandler;
+let statusBarItem: vscode.StatusBarItem;
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('=== Insightor extension activation started ===');
@@ -38,6 +39,14 @@ export function activate(context: vscode.ExtensionContext) {
         showCollapseAll: true
     });
     context.subscriptions.push(treeView);
+
+    // Create status bar item
+    statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
+    statusBarItem.text = '$(checklist) Insightor';
+    statusBarItem.tooltip = '点击运行 Insightor Full Review';
+    statusBarItem.command = 'insightor.fullReview';
+    statusBarItem.show();
+    context.subscriptions.push(statusBarItem);
 
     // Register commands
     console.log('Registering commands...');
