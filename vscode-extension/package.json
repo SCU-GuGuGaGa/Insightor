@@ -2,7 +2,7 @@
   "name": "insightor-vscode",
   "displayName": "Insightor - AI PR Review",
   "description": "AI-powered GitHub PR review in VSCode. Native TypeScript implementation - no Python required! Supports OpenAI, Anthropic, DeepSeek.",
-  "version": "0.2.0",
+  "version": "0.2.3",
   "publisher": "codingNow",
   "icon": "resources/icon.png",
   "repository": {
@@ -32,7 +32,19 @@
     "anthropic",
     "deepseek"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onStartupFinished",
+    "onCommand:insightor.reviewPR",
+    "onCommand:insightor.describePR",
+    "onCommand:insightor.risksPR",
+    "onCommand:insightor.fullReview",
+    "onCommand:insightor.publishReview",
+    "onCommand:insightor.openSettings",
+    "onCommand:insightor.refreshView",
+    "onCommand:insightor.viewFinding",
+    "onCommand:insightor.applyFix",
+    "onView:insightorView"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [

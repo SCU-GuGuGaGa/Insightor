@@ -1,8 +1,11 @@
 import * as vscode from 'vscode';
+import * as fs from 'fs';
+import * as path from 'path';
 import { GitHubService } from './core/githubService';
 import { LLMService } from './core/llmService';
 import { AnalysisService, AnalysisDepth } from './core/analysisService';
 import { ConfigService } from './core/configService';
+import { MarkdownGenerator } from './core/markdownGenerator';
 import { ReviewResult } from './insightorService';
 
 /**
@@ -73,6 +76,12 @@ export class InsightorServiceV2 {
             this.outputChannel.appendLine(`✅ 审查完成`);
             this.outputChannel.appendLine(`评分: ${result.merge_readiness?.score}/100`);
             this.outputChannel.appendLine(`发现: ${result.findings.length} 个问题`);
+
+            // 生成 markdown 文件
+            const mdPath = await this.saveMarkdownReport(result, prUrl);
+            if (mdPath) {
+                this.outputChannel.appendLine(`📄 Markdown 报告已生成: ${mdPath}`);
+            }
 
             return result;
         } catch (error) {
@@ -189,8 +198,41 @@ export class InsightorServiceV2 {
             this.outputChannel.appendLine(`\n📤 发布审查: ${mdPath}`);
             this.outputChannel.appendLine(`Dry run: ${dryRun}`);
 
-            // TODO: 实现发布逻辑（解析 Markdown，提取评论，发布到 GitHub）
-            throw new Error('发布功能正在开发中');
+            // 读取 markdown 文件
+            if (!fs.existsSync(mdPath)) {
+                throw new Error(`文件不存在: ${mdPath}`);
+            }
+
+            const markdown = fs.readFileSync(mdPath, 'utf-8');
+
+            // 从 markdown 中提取 PR URL
+            const prUrlMatch = markdown.match(/PR URL.*?(https:\/\/github\.com\/[^\s\)]+)/);
+            if (!prUrlMatch) {
+                throw new Error('无法从 Markdown 中提取 PR URL');
+            }
+            const prUrl = prUrlMatch[1];
+
+            this.outputChannel.appendLine(`提取到 PR URL: ${prUrl}`);
+
+            // 解析 PR URL
+            const { owner, repo, prNumber } = this.github!.parsePRUrl(prUrl);
+
+            if (dryRun) {
+                this.outputChannel.appendLine('\n=== DRY RUN 模式 ===');
+                this.outputChannel.appendLine(`将发布到: ${owner}/${repo}#${prNumber}`);
+                this.outputChannel.appendLine(`\n评论内容预览:\n`);
+                this.outputChannel.appendLine('--- 开始 ---');
+                this.outputChannel.appendLine(markdown);
+                this.outputChannel.appendLine('--- 结束 ---');
+                this.outputChannel.appendLine('\n✅ Dry run 完成（未实际发布）');
+            } else {
+                // 实际发布评论到 GitHub
+                this.outputChannel.appendLine(`正在发布评论到 ${owner}/${repo}#${prNumber}...`);
+
+                await this.github!.createComment(owner, repo, prNumber, markdown);
+
+                this.outputChannel.appendLine('✅ 评论发布成功！');
+            }
         } catch (error) {
             this.outputChannel.appendLine(`❌ 发布失败: ${error}`);
             throw error;
@@ -232,5 +274,42 @@ export class InsightorServiceV2 {
      */
     showOutput() {
         this.outputChannel.show();
+    }
+
+    /**
+     * 保存 markdown 报告
+     */
+    private async saveMarkdownReport(result: ReviewResult, prUrl: string): Promise<string | null> {
+        try {
+            const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
+            if (!workspaceFolder) {
+                this.outputChannel.appendLine('⚠️ 没有打开的工作区，无法保存 markdown 文件');
+                return null;
+            }
+
+            // 从 PR URL 提取 PR 编号
+            const prNumber = this.extractPRNumber(prUrl);
+            const fileName = `insightor-full-review-${prNumber}.md`;
+            const filePath = path.join(workspaceFolder.uri.fsPath, fileName);
+
+            // 生成 markdown 内容
+            const markdown = MarkdownGenerator.generateFullReview(result);
+
+            // 保存文件
+            fs.writeFileSync(filePath, markdown, 'utf-8');
+
+            return filePath;
+        } catch (error) {
+            this.outputChannel.appendLine(`❌ 保存 markdown 失败: ${error}`);
+            return null;
+        }
+    }
+
+    /**
+     * 从 PR URL 提取 PR 编号
+     */
+    private extractPRNumber(prUrl: string): string {
+        const match = prUrl.match(/\/pull\/(\d+)/);
+        return match ? match[1] : Date.now().toString();
     }
 }
