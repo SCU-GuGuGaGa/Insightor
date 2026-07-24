@@ -2,7 +2,7 @@
   "name": "insightor-vscode",
   "displayName": "Insightor - AI PR Review",
   "description": "AI-powered GitHub PR review in VSCode. Native TypeScript implementation - no Python required! Supports OpenAI, Anthropic, DeepSeek.",
-  "version": "0.2.3",
+  "version": "0.2.1",
   "publisher": "codingNow",
   "icon": "resources/icon.png",
   "repository": {

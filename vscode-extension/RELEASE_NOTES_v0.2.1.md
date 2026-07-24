@@ -1,4 +1,4 @@
-# Release Notes - v0.2.3
+# Release Notes - v0.2.1
 
 ## 🎉 主要改进
 

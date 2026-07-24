@@ -2,7 +2,7 @@
 
 All notable changes to the "insightor-vscode" extension will be documented in this file.
 
-## [0.2.3] - 2026-07-24
+## [0.2.1] - 2026-07-24
 
 ### Added
 - ✨ **Webview Preview** - Beautiful HTML preview for review results with modern UI
