@@ -226,6 +226,16 @@
           "default": "",
           "description": "Optional: Override default model (e.g., gpt-4o, claude-sonnet-4)"
         },
+        "insightor.proxy.enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable proxy support (only enable if you need to use a proxy)"
+        },
+        "insightor.proxy.url": {
+          "type": "string",
+          "default": "",
+          "description": "Optional: Custom proxy URL (e.g., http://127.0.0.1:7890). Leave empty to use system proxy."
+        },
         "insightor.pythonPath": {
           "type": "string",
           "default": "python",
@@ -282,6 +292,7 @@
     "@anthropic-ai/sdk": "^0.114.0",
     "@octokit/rest": "^22.0.1",
     "axios": "^1.18.1",
+    "https-proxy-agent": "^9.1.0",
     "openai": "^6.49.0"
   }
 }

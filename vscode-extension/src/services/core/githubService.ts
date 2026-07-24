@@ -1,4 +1,5 @@
 import { Octokit } from '@octokit/rest';
+import * as vscode from 'vscode';
 
 export interface PRData {
     number: number;
@@ -46,7 +47,34 @@ export class GitHubService {
     private octokit: Octokit;
 
     constructor(token: string) {
-        this.octokit = new Octokit({ auth: token });
+        const config = vscode.workspace.getConfiguration('insightor');
+        const proxyEnabled = config.get<boolean>('proxy.enabled', false);
+
+        const options: any = {
+            auth: token
+        };
+
+        // 默认情况下不使用代理，避免系统代理干扰
+        if (!proxyEnabled) {
+            // 明确禁用代理
+            options.request = {
+                agent: false
+            };
+        }
+        // 如果用户明确启用了代理，则使用配置的代理或系统代理
+        else {
+            const proxyUrl = config.get<string>('proxy.url', '');
+            if (proxyUrl) {
+                // 使用自定义代理
+                const { HttpsProxyAgent } = require('https-proxy-agent');
+                options.request = {
+                    agent: new HttpsProxyAgent(proxyUrl)
+                };
+            }
+            // 否则让 octokit 自动检测系统代理
+        }
+
+        this.octokit = new Octokit(options);
     }
 
     /**

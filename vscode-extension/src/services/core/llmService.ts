@@ -1,6 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import OpenAI from 'openai';
 import axios from 'axios';
+import * as vscode from 'vscode';
 
 export type LLMProvider = 'openai' | 'anthropic' | 'deepseek';
 
@@ -31,24 +32,50 @@ export class LLMService {
     }
 
     private initializeClient() {
+        const vsConfig = vscode.workspace.getConfiguration('insightor');
+        const proxyEnabled = vsConfig.get<boolean>('proxy.enabled', false);
+
+        // 准备 fetch 配置（用于禁用代理）
+        const fetchOptions: any = {};
+
+        if (!proxyEnabled) {
+            // 禁用代理 - 使用 node-fetch 时需要设置 agent 为 false
+            fetchOptions.agent = false;
+        } else {
+            const proxyUrl = vsConfig.get<string>('proxy.url', '');
+            if (proxyUrl) {
+                const { HttpsProxyAgent } = require('https-proxy-agent');
+                fetchOptions.agent = new HttpsProxyAgent(proxyUrl);
+            }
+        }
+
         switch (this.config.provider) {
             case 'anthropic':
                 this.anthropic = new Anthropic({
                     apiKey: this.config.apiKey,
-                    baseURL: this.config.baseUrl
+                    baseURL: this.config.baseUrl,
+                    fetch: proxyEnabled ? undefined : (url: any, init: any) => {
+                        return fetch(url, { ...init, ...fetchOptions });
+                    }
                 });
                 break;
             case 'openai':
                 this.openai = new OpenAI({
                     apiKey: this.config.apiKey,
-                    baseURL: this.config.baseUrl || 'https://api.openai.com/v1'
+                    baseURL: this.config.baseUrl || 'https://api.openai.com/v1',
+                    fetch: proxyEnabled ? undefined : (url: any, init: any) => {
+                        return fetch(url, { ...init, ...fetchOptions });
+                    }
                 });
                 break;
             case 'deepseek':
                 // DeepSeek 使用 OpenAI 兼容接口
                 this.openai = new OpenAI({
                     apiKey: this.config.apiKey,
-                    baseURL: this.config.baseUrl || 'https://api.deepseek.com'
+                    baseURL: this.config.baseUrl || 'https://api.deepseek.com',
+                    fetch: proxyEnabled ? undefined : (url: any, init: any) => {
+                        return fetch(url, { ...init, ...fetchOptions });
+                    }
                 });
                 break;
         }
