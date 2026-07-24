@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { InsightorService } from './services/insightorService';
 import { InsightorServiceV2 } from './services/insightorServiceV2';
 import { ReviewTreeProvider } from './views/reviewTreeProvider';
+import { WelcomeViewProvider } from './views/welcomeViewProvider';
 import { CommandHandler } from './commands/commandHandler';
 import { ConfigService } from './services/core/configService';
 
@@ -32,6 +33,12 @@ export function activate(context: vscode.ExtensionContext) {
 
     reviewTreeProvider = new ReviewTreeProvider(context);
     commandHandler = new CommandHandler(context, insightorService, reviewTreeProvider);
+
+    // Register welcome view
+    const welcomeProvider = new WelcomeViewProvider(context.extensionUri);
+    context.subscriptions.push(
+        vscode.window.registerWebviewViewProvider(WelcomeViewProvider.viewType, welcomeProvider)
+    );
 
     // Register tree view
     const treeView = vscode.window.createTreeView('insightorView', {

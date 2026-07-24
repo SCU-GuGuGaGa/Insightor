@@ -45,22 +45,35 @@ Full Review 现在会自动生成 Markdown 文件，方便发布到 GitHub。
 
 **新增快捷入口：**
 
-#### ① 状态栏按钮
-- 左下角显示 `$(checklist) Insightor` 按钮
-- 点击即可快速运行 Full Review
+#### ① 侧边栏快捷操作面板（最直观）⭐
+- 打开 Insightor 侧边栏（点击 Activity Bar 的 Insightor 图标）
+- **Quick Actions** 面板显示所有功能按钮：
+  - 🎯 **Full Review** - 完整审查（推荐）
+  - 🔍 **Review PR** - 代码审查
+  - 📝 **Describe PR** - 生成描述
+  - ⚠️ **Analyze Risks** - 风险分析
+  - 📤 **Publish Review** - 发布到 GitHub
+  - ⚙️ **Settings** - 打开设置
+- 每个按钮都有图标和说明，一目了然
 
-#### ② 右键菜单
-- 在编辑器中右键 → 看到 Insightor 菜单组
-- 包含：Full Review、Review PR、Describe PR、Analyze Risks
+#### ② 状态栏按钮（最快捷）
+- 位置：VSCode 左下角
+- 显示：`$(checklist) Insightor`
+- 点击：直接运行 Full Review
 
-#### ③ 侧边栏工具栏
-- 打开 Insightor 侧边栏
-- 工具栏显示：Full Review、刷新、设置 按钮
-- 一键操作，无需输入命令
+#### ③ 编辑器右键菜单
+- 在任何编辑器中右键
+- 看到 "Insightor" 菜单组
+- 包含所有审查命令
 
 #### ④ 文件资源管理器右键
-- 右键点击生成的 `.md` 文件（insightor-*.md）
-- 直接选择 "Publish Review" 发布
+- 右键点击生成的 `insightor-*.md` 文件
+- 直接选择 "Publish Review"
+
+#### ⑤ 命令面板（传统方式）
+- `Ctrl+Shift+P`
+- 输入 "Insightor"
+- 选择命令
 
 ### 5. 🔧 其他改进
 

@@ -11,10 +11,11 @@ All notable changes to the "insightor-vscode" extension will be documented in th
 - 🎨 **Visual Score Display** - Large circular score indicator in Webview
 - 📊 **Findings Dashboard** - Categorized cards showing Critical/High/Medium/Low counts
 - 💡 **Code Comparison View** - Side-by-side display of current code and suggested fixes
-- 🎯 **Status Bar Button** - Quick access to Full Review from bottom-left status bar
+- 🎯 **Quick Actions Panel** - Sidebar panel with all function buttons (most intuitive way to use)
+- 🔘 **Status Bar Button** - Quick access to Full Review from bottom-left status bar
 - 📋 **Editor Context Menu** - Right-click in editor to access Insightor commands
 - 🗂️ **Explorer Context Menu** - Right-click on .md files to publish directly
-- 🔘 **Sidebar Toolbar Buttons** - One-click access to Full Review, Refresh, and Settings
+- 🛠️ **Sidebar Toolbar Buttons** - One-click access to Full Review, Refresh, and Settings
 
 ### Fixed
 - ✅ Fixed "command not found" error by adding `onStartupFinished` activation event

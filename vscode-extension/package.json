@@ -95,6 +95,11 @@
     "views": {
       "insightor-sidebar": [
         {
+          "id": "insightorWelcome",
+          "name": "Quick Actions",
+          "type": "webview"
+        },
+        {
           "id": "insightorView",
           "name": "Review Results",
           "icon": "resources/sidebar-icon.svg",
