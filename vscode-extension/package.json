@@ -1,8 +1,8 @@
 {
   "name": "insightor-vscode",
-  "displayName": "Insightor",
-  "description": "AI-powered GitHub PR review in VSCode. Requires: Insightor CLI (pip install) + LLM API key. Commands: Full Review, Describe PR, Analyze Risks, Publish Review.",
-  "version": "0.1.1",
+  "displayName": "Insightor - AI PR Review",
+  "description": "AI-powered GitHub PR review in VSCode. Native TypeScript implementation - no Python required! Supports OpenAI, Anthropic, DeepSeek.",
+  "version": "0.2.0",
   "publisher": "codingNow",
   "icon": "resources/icon.png",
   "repository": {
@@ -25,11 +25,14 @@
     "pull request",
     "code review",
     "ai",
-    "llm"
+    "llm",
+    "typescript",
+    "native",
+    "openai",
+    "anthropic",
+    "deepseek"
   ],
-  "activationEvents": [
-    "*"
-  ],
+  "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
@@ -147,14 +150,53 @@
     "configuration": {
       "title": "Insightor",
       "properties": {
+        "insightor.useNativeImplementation": {
+          "type": "boolean",
+          "default": true,
+          "description": "Use native TypeScript implementation (no Python required). Set to false to use Python CLI."
+        },
+        "insightor.githubToken": {
+          "type": "string",
+          "default": "",
+          "description": "GitHub Personal Access Token (required for native implementation)"
+        },
+        "insightor.llm.provider": {
+          "type": "string",
+          "enum": [
+            "openai",
+            "anthropic",
+            "deepseek"
+          ],
+          "default": "deepseek",
+          "description": "LLM provider to use"
+        },
+        "insightor.llm.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "LLM API Key (required for native implementation)"
+        },
+        "insightor.llm.baseUrl": {
+          "type": "string",
+          "default": "",
+          "description": "Optional: Custom API base URL for third-party providers"
+        },
+        "insightor.llm.model": {
+          "type": "string",
+          "default": "",
+          "description": "Optional: Override default model (e.g., gpt-4o, claude-sonnet-4)"
+        },
         "insightor.pythonPath": {
           "type": "string",
           "default": "python",
-          "description": "Path to Python executable (must have insightor installed)"
+          "description": "[Python CLI mode only] Path to Python executable"
         },
         "insightor.defaultDepth": {
           "type": "string",
-          "enum": ["quick", "standard", "deep"],
+          "enum": [
+            "quick",
+            "standard",
+            "deep"
+          ],
           "default": "standard",
           "description": "Default analysis depth"
         },
@@ -171,7 +213,7 @@
         "insightor.model": {
           "type": "string",
           "default": "",
-          "description": "Override default LLM model (leave empty to use config default)"
+          "description": "[Deprecated] Use insightor.llm.model instead"
         }
       }
     }
@@ -191,9 +233,14 @@
     "@typescript-eslint/eslint-plugin": "^6.x",
     "@typescript-eslint/parser": "^6.x",
     "@vscode/test-electron": "^2.3.x",
+    "@vscode/vsce": "^2.22.x",
     "eslint": "^8.x",
-    "typescript": "^5.3.x",
-    "@vscode/vsce": "^2.22.x"
+    "typescript": "^5.3.x"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.114.0",
+    "@octokit/rest": "^22.0.1",
+    "axios": "^1.18.1",
+    "openai": "^6.49.0"
+  }
 }

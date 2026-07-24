@@ -76,55 +76,124 @@ Insightor将 AI 驱动的代码审查能力直接集成到网页或是您的vsco
 
 ## 📦 详细安装
 
+> 💡 **首次使用？** 强烈推荐阅读 [完整安装配置指南 →](INSTALLATION.md)，包含 Python 环境配置、虚拟环境设置、API 密钥获取详细步骤。
+
+### 前置要求
+
+- **Python 3.11+**（检查版本：`python --version`）
+- **Git**
+- **Node.js 16+**（如果使用 VSCode 扩展或 Web 控制台）
+
 ### 方式一：安装 Insightor CLI
 
-**方式 A：从 PyPI 安装（推荐）**
-
-```bash
-pip install git+https://github.com/SCU-GuGuGaGa/Insightor.git
-```
-
-**方式 B：从源码安装**
+**步骤 1：克隆项目并创建虚拟环境（推荐）**
 
 ```bash
 git clone https://github.com/SCU-GuGuGaGa/Insightor.git
 cd Insightor
-pip install -e .
+
+# 创建虚拟环境
+python -m venv venv
+
+# 激活虚拟环境
+# Windows:
+venv\Scripts\activate
+# macOS/Linux:
+source venv/bin/activate
 ```
 
-**验证安装：**
+**步骤 2：安装依赖**
+
+```bash
+# 基础安装
+pip install -e .
+
+# 如果需要 Web 控制台
+pip install -e ".[web]"
+```
+
+**步骤 3：验证安装**
 
 ```bash
 python -m insightor --version
 # 应输出：insightor 0.1.0
 ```
 
-### 配置 API Key
+### 配置 API Key（必需）
 
-在**项目根目录**创建 `.env` 文件（审查 PR 的项目目录）：
+**1. 复制配置文件模板**
 
 ```bash
-# 选择一个提供商：
-OPENAI_API_KEY=sk-proj-xxxxx           # OpenAI GPT-4
-DEEPSEEK_API_KEY=sk-xxxxx              # DeepSeek（更便宜）
-ANTHROPIC_API_KEY=sk-ant-xxxxx         # Claude
+cp .env.example .env
 ```
 
-💡 **提示**：也可以全局设置环境变量，或使用 `.insightor.yml` 进行项目级配置。
+**2. 编辑 `.env` 文件，填入您的密钥**
+
+```env
+# ============= 必需：GitHub Token =============
+# 获取方式：https://github.com/settings/tokens
+# 权限：repo（完整仓库权限）
+GITHUB_TOKEN=ghp_你的GitHub_token
+
+# ============= 必需：至少选择一个 LLM 提供商 =============
+
+# 选项 1: OpenAI（推荐新手）
+OPENAI_API_KEY=sk-proj-你的密钥
+INSIGHTOR_MODELS_PRIMARY=gpt-4o
+INSIGHTOR_MODELS_WEAK=gpt-4o-mini
+
+# 选项 2: DeepSeek（更便宜，中文友好）
+DEEPSEEK_API_KEY=sk-你的密钥
+INSIGHTOR_MODELS_PRIMARY=deepseek-v4-pro
+INSIGHTOR_MODELS_WEAK=deepseek-v4-flash
+
+# 选项 3: Anthropic Claude（最强推理）
+ANTHROPIC_API_KEY=sk-ant-你的密钥
+INSIGHTOR_MODELS_PRIMARY=claude-sonnet-4-6
+INSIGHTOR_MODELS_REASONING=claude-opus-4-8
+
+# ============= 可选：第三方 API 网关 =============
+# 如果使用第三方服务，需要配置 Base URL
+# ANTHROPIC_BASE_URL=https://your-gateway.com
+```
+
+**3. 获取 API Key 详细指南**
+
+| 提供商 | 获取地址 | 说明 |
+|--------|---------|------|
+| **GitHub** | https://github.com/settings/tokens | 需要 `repo` 权限 |
+| **OpenAI** | https://platform.openai.com/api-keys | 格式：`sk-proj-xxxxx` |
+| **DeepSeek** | https://platform.deepseek.com/api_keys | 便宜、中文友好 |
+| **Claude** | https://console.anthropic.com/settings/keys | 格式：`sk-ant-xxxxx` |
+
+💡 **提示**：
+- `.env` 文件应放在**您要审查的项目根目录**（不是 Insightor 项目目录）
+- 不要将 `.env` 文件提交到 Git！
+- 详细的配置说明和问题排查请参考：[INSTALLATION.md](INSTALLATION.md)
 
 ### 方式二：安装 VSCode 扩展
 
-**方式 A：从 VSIX 安装（推荐）**
+> 💡 **前提**：必须先完成方式一的 CLI 安装和 API Key 配置！
 
-1. 下载 `insightor-vscode-0.1.1.vsix`
-2. 打开 VSCode → 扩展（`Ctrl+Shift+X`）
-3. 点击 `...` 菜单 → `从 VSIX 安装...`
-4. 选择下载的文件
+**快速安装（3 步）：**
 
-**方式 B：从VSCode扩展市场安装**
+1. **下载扩展**：[insightor-vscode-0.1.1.vsix](vscode-extension/insightor-vscode-0.1.1.vsix)
+2. **安装**：VSCode → 扩展（`Ctrl+Shift+X`）→ `...` → 从 VSIX 安装
+3. **配置 Python 路径**（如果使用虚拟环境）：
+   - 打开设置（`Ctrl+,`）→ 搜索 "insightor.pythonPath"
+   - 设置为虚拟环境的 Python 路径
 
-1. 打开 VSCode → 扩展（`Ctrl+Shift+X`）
-2. 搜索 Insightor，选择并下载
+**完整文档** → [vscode-extension/README.md](vscode-extension/README.md)
+
+**常见问题**：
+
+| 问题 | 解决方法 |
+|------|----------|
+| ❌ "Insightor CLI not found" | 先安装 CLI：`pip install -e .`，然后配置 Python 路径 |
+| ❌ "Review failed" | 检查 `.env` 文件中的 API Key 是否正确配置 |
+| ❌ 结果不显示 | 确保打开了工作区文件夹（File → Open Folder） |
+
+**更多问题** → [vscode-extension/TROUBLESHOOTING.md](vscode-extension/TROUBLESHOOTING.md)
 
 ## 🚀 使用方法
 
@@ -167,27 +236,34 @@ uvicorn web.backend.app:app --host 0.0.0.0 --port 8000
 
 ### VSCode 扩展使用
 
-**1️⃣ 打开命令面板**
-
-- 按 `Ctrl+Shift+P`（Windows/Linux）或 `Cmd+Shift+P`（Mac）
-
-**2️⃣ 选择命令**
-
-- `Insightor: Full Review` - 完整分析（首次使用推荐）
-- `Insightor: Review PR` - 仅代码审查
-- `Insightor: Describe PR` - 生成 PR 描述
-- `Insightor: Analyze Risks` - 安全和性能风险
-- `Insightor: Publish Review` - 发布结果到 GitHub
-
-**3️⃣ 输入 PR URL**
+**快速开始：**
 
 ```
-https://github.com/owner/repo/pull/123
+1. Ctrl+Shift+P → "Insightor: Full Review"
+2. 输入 PR URL（如 https://github.com/owner/repo/pull/123）
+3. 选择分析深度（standard 推荐）
+4. 查看侧边栏结果 + Markdown 报告
 ```
 
-**4️⃣ 选择分析深度**
+**可用命令：**
 
-- `quick` - 15 秒，小型 PR
+| 命令 | 功能 | 耗时 |
+|------|------|------|
+| **Full Review** | 完整分析（描述 + 风险 + 审查） | ~45s |
+| **Review PR** | 仅代码审查 | ~30s |
+| **Describe PR** | 生成 PR 描述 | ~15s |
+| **Analyze Risks** | 识别安全/性能风险 | ~20s |
+| **Publish Review** | 发布到 GitHub | ~5s |
+
+**侧边栏视图：**
+
+点击活动栏的 Insightor 图标查看：
+- 📊 合并就绪评分（0-100）
+- 🔴 按严重程度分类的发现（Critical/High/Medium/Low）
+- 📁 变更文件列表
+- 💡 一键应用修复建议
+
+**详细使用指南** → [vscode-extension/README.md](vscode-extension/README.md)
 - `standard` - 30 秒，大多数 PR（默认）
 - `deep` - 60 秒，关键变更
 

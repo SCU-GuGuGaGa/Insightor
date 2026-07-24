@@ -8,3 +8,30 @@ vsc-extension-quickstart.md
 **/.eslintrc.json
 **/*.map
 **/*.ts
+
+# 开发相关文档（不需要打包）
+COMPLETION_REPORT.md
+DEBUG_INSTRUCTIONS.md
+DELIVERY_CHECKLIST.md
+DELIVERY_REPORT.md
+DEMO.md
+DEVELOPMENT.md
+FINAL_SUMMARY.md
+INDEX.md
+PROJECT_COMPLETE.md
+PROJECT_SUMMARY.md
+START_HERE.md
+STRUCTURE.md
+TEST_REPORT.md
+TROUBLESHOOTING_NEW.md
+QUICKSTART_5MIN.md
+
+# 编译和测试相关
+node_modules/**
+!node_modules/@octokit/**
+!node_modules/@anthropic-ai/**
+!node_modules/openai/**
+!node_modules/axios/**
+
+# VSIX 文件
+*.vsix
