@@ -144,10 +144,13 @@ export class CommandHandler {
             }
         );
 
+        let result: any = null;
+        let mdPath: string = '';
+
         await this.executeWithProgress(
             'Running full review...',
             async () => {
-                const result = await this.insightorService.fullReview(
+                result = await this.insightorService.fullReview(
                     prUrl,
                     depth,
                     skipOptions
@@ -156,7 +159,7 @@ export class CommandHandler {
 
                 // Open the generated markdown file
                 const prNum = this.extractPRNumber(prUrl);
-                const mdPath = path.join(
+                mdPath = path.join(
                     vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || '',
                     `insightor-full-review-${prNum}.md`
                 );
@@ -164,20 +167,22 @@ export class CommandHandler {
                 if (fs.existsSync(mdPath)) {
                     const doc = await vscode.workspace.openTextDocument(mdPath);
                     await vscode.window.showTextDocument(doc, { preview: false });
-
-                    // 显示成功消息，询问是否打开 Webview 预览
-                    const action = await vscode.window.showInformationMessage(
-                        '审查完成！Markdown 报告已生成。',
-                        '打开 Webview 预览',
-                        '仅查看 Markdown'
-                    );
-
-                    if (action === '打开 Webview 预览' && result) {
-                        this.showReviewWebview(result, prUrl);
-                    }
                 }
             }
         );
+
+        // 在进度条完成后再询问
+        if (result && fs.existsSync(mdPath)) {
+            const action = await vscode.window.showInformationMessage(
+                '审查完成！Markdown 报告已生成。',
+                '打开 Webview 预览',
+                '仅查看 Markdown'
+            );
+
+            if (action === '打开 Webview 预览') {
+                this.showReviewWebview(result, prUrl);
+            }
+        }
     }
 
     async publishReview(): Promise<void> {

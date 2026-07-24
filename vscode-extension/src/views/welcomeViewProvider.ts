@@ -96,61 +96,71 @@ export class WelcomeViewProvider implements vscode.WebviewViewProvider {
 
         .button {
             width: 100%;
-            padding: 12px 16px;
+            padding: 10px 14px;
             margin-bottom: 8px;
-            background: var(--vscode-button-background);
-            color: var(--vscode-button-foreground);
-            border: none;
-            border-radius: 4px;
+            background: var(--vscode-button-secondaryBackground);
+            color: var(--vscode-button-secondaryForeground);
+            border: 1px solid var(--vscode-panel-border);
+            border-radius: 2px;
             cursor: pointer;
             font-size: 13px;
-            font-weight: 500;
+            font-weight: normal;
             text-align: left;
             display: flex;
             align-items: center;
-            transition: background 0.2s;
+            transition: all 0.15s;
         }
 
         .button:hover {
-            background: var(--vscode-button-hoverBackground);
+            background: var(--vscode-list-hoverBackground);
+            border-color: var(--vscode-focusBorder);
         }
 
         .button:active {
-            transform: scale(0.98);
+            transform: translateY(1px);
         }
 
         .button-primary {
             background: var(--vscode-button-background);
-            padding: 14px 16px;
-            font-size: 14px;
+            color: var(--vscode-button-foreground);
+            border-color: transparent;
+            padding: 12px 14px;
+            font-weight: 500;
+        }
+
+        .button-primary:hover {
+            background: var(--vscode-button-hoverBackground);
         }
 
         .button-secondary {
-            background: var(--vscode-button-secondaryBackground);
-            color: var(--vscode-button-secondaryForeground);
+            background: transparent;
+            color: var(--vscode-foreground);
         }
 
         .button-secondary:hover {
-            background: var(--vscode-button-secondaryHoverBackground);
+            background: var(--vscode-list-hoverBackground);
         }
 
         .button-icon {
             margin-right: 10px;
             font-size: 16px;
+            min-width: 18px;
         }
 
         .button-content {
             flex: 1;
+            min-width: 0;
         }
 
         .button-title {
-            font-weight: 600;
+            font-weight: 500;
             margin-bottom: 2px;
         }
 
         .button-desc {
             font-size: 11px;
-            opacity: 0.8;
+            opacity: 0.7;
+            line-height: 1.3;
         }
 
         .divider {
@@ -178,42 +188,42 @@ export class WelcomeViewProvider implements vscode.WebviewViewProvider {
 <body>
     <div class="container">
         <div class="header">
-            <h2>🤖 Insightor AI Review</h2>
-            <p>快速访问 PR 审查工具</p>
+            <h2>Insightor</h2>
+            <p>AI-powered PR Review Tool</p>
         </div>
 
         <div class="section">
             <div class="section-title">主要功能</div>
 
             <button class="button button-primary" onclick="executeCommand('fullReview')">
-                <span class="button-icon">🎯</span>
+                <span class="button-icon">▶</span>
                 <div class="button-content">
                     <div class="button-title">Full Review</div>
-                    <div class="button-desc">完整审查 - 包含描述、风险、代码审查</div>
+                    <div class="button-desc">完整审查 - 描述、风险分析、代码审查</div>
                 </div>
             </button>
 
             <button class="button button-secondary" onclick="executeCommand('reviewPR')">
-                <span class="button-icon">🔍</span>
+                <span class="button-icon">✓</span>
                 <div class="button-content">
-                    <div class="button-title">Review PR</div>
+                    <div class="button-title">Code Review</div>
                     <div class="button-desc">代码审查 - 检查代码质量问题</div>
                 </div>
             </button>
 
             <button class="button button-secondary" onclick="executeCommand('describePR')">
-                <span class="button-icon">📝</span>
+                <span class="button-icon">≡</span>
                 <div class="button-content">
                     <div class="button-title">Describe PR</div>
-                    <div class="button-desc">生成 PR 描述和变更摘要</div>
+                    <div class="button-desc">生成 PR 描述和文件变更摘要</div>
                 </div>
             </button>
 
             <button class="button button-secondary" onclick="executeCommand('risksPR')">
-                <span class="button-icon">⚠️</span>
+                <span class="button-icon">!</span>
                 <div class="button-content">
                     <div class="button-title">Analyze Risks</div>
-                    <div class="button-desc">分析潜在风险和安全问题</div>
+                    <div class="button-desc">分析安全、性能等潜在风险</div>
                 </div>
             </button>
         </div>
@@ -224,25 +234,25 @@ export class WelcomeViewProvider implements vscode.WebviewViewProvider {
             <div class="section-title">其他操作</div>
 
             <button class="button button-secondary" onclick="executeCommand('publishReview')">
-                <span class="button-icon">📤</span>
+                <span class="button-icon">↑</span>
                 <div class="button-content">
-                    <div class="button-title">Publish Review</div>
-                    <div class="button-desc">发布审查结果到 GitHub</div>
+                    <div class="button-title">Publish to GitHub</div>
+                    <div class="button-desc">发布审查结果到 PR 评论</div>
                 </div>
             </button>
 
             <button class="button button-secondary" onclick="executeCommand('openSettings')">
-                <span class="button-icon">⚙️</span>
+                <span class="button-icon">⚙</span>
                 <div class="button-content">
                     <div class="button-title">Settings</div>
-                    <div class="button-desc">配置 API Key 和选项</div>
+                    <div class="button-desc">配置 GitHub Token 和 API Key</div>
                 </div>
             </button>
         </div>
 
         <div class="quick-tip">
-            <strong>💡 快速提示</strong>
-            点击左下角状态栏的 "Insightor" 按钮也可以快速启动 Full Review！
+            <strong>提示</strong>
+            左下角状态栏的 "Insightor" 按钮可快速启动 Full Review
         </div>
     </div>
 
